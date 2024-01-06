@@ -1,7 +1,8 @@
 // rfce
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
+import Error from './Error';
 
-function Form() {
+function Form({pacients, setPacients}) {
   const [petName, setPetName] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const [email, setEmail] = useState("");
@@ -9,6 +10,13 @@ function Form() {
   const [description, setDescription] = useState("");
 
   const [error, setError] = useState(false)
+
+  const generateId = () => {
+    const randomString = Math.random().toString(36).substring(2);
+    const randomDate = Date.now().toString(36);
+
+    return randomString + randomDate
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,6 +28,23 @@ function Form() {
     }
     
     setError(false);
+
+    var newPacient = {
+      petName, 
+      ownerName,
+      email,
+      date,
+      description,
+      id: generateId()
+    }
+
+    setPacients([...pacients, newPacient])
+
+    setPetName('')
+    setOwnerName('')
+    setEmail('')
+    setDate('')
+    setDescription('')
   }
 
   return (
@@ -38,11 +63,7 @@ function Form() {
         className="bg-white shadow-md rounded-lg py-10 px-5"
       >
 
-        {error && (
-          <div className='bg-red-600 text-lg text-center font-black mb-2 text-white p-3 rounded-md uppercase'>
-            <p>All fields are required</p>
-          </div>)
-        }
+        {error && <Error errorMessage={'All fields are required'}/>}
 
         <div className="mb-5">
           <label htmlFor="mascot" className="block text-gray-700 uppercase font-bold">
