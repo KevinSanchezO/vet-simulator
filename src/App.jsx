@@ -5,16 +5,8 @@ import PacientsList from "./components/PacientsList"
 
 function App() {
   
-  const [pacients, setPacients] = useState([]);
+  const [pacients, setPacients] = useState(JSON.parse(localStorage.getItem('pacients')) ?? []);
   const [pacient, setPacient] = useState({});
-
-  useEffect(() => {
-    const retrieveLocalStorage = () => {
-      const pacientsLS = JSON.parse(localStorage.getItem('pacients')) ?? [];
-      setPacients(pacientsLS);
-    }
-    retrieveLocalStorage();
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('pacients', JSON.stringify(pacients));
