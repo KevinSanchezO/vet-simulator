@@ -1,7 +1,16 @@
 // rfce
-function Pacient({pacient, setPacient}) {
+function Pacient({pacient, setPacient, deletePacient}) {
 
-  const {petName, ownerName, email, date, description} = pacient
+  const {petName, ownerName, email, date, description, id} = pacient
+
+  const handleEliminar = () => {
+    const response = confirm(`Desea eliminar el paciente ${petName} con el dueño ${ownerName}?`)
+
+    if (response) {
+      deletePacient(id)
+    }
+
+  }
 
   return (
     <div className="mx-5 bg-white shadow-md px-5 py-10 rounded-xl mb-3">
@@ -37,6 +46,7 @@ function Pacient({pacient, setPacient}) {
 
           <button
             type="button"
+            onClick={handleEliminar}
             className="py-2 px-10 bg-red-600 hover:bg-red-700 text-white font-bold
             uppercase rounded-lg"
           > Eliminar </button>

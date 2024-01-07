@@ -2,7 +2,7 @@
 import {useState, useEffect} from 'react'
 import Error from './Error';
 
-function Form({pacients, setPacients}) {
+function Form({pacients, setPacients, pacient, setPacient}) {
   const [petName, setPetName] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const [email, setEmail] = useState("");
@@ -10,6 +10,17 @@ function Form({pacients, setPacients}) {
   const [description, setDescription] = useState("");
 
   const [error, setError] = useState(false)
+
+  useEffect(() => {
+    // Checks if there is a value in the hook
+    if (Object.keys(pacient). length > 0) {
+      setPetName(pacient.petName)
+      setOwnerName(pacient.ownerName)
+      setEmail(pacient.email)
+      setDate(pacient.date)
+      setDescription(pacient.description)
+    }
+  }, [pacient])
 
   const generateId = () => {
     const randomString = Math.random().toString(36).substring(2);
@@ -29,16 +40,34 @@ function Form({pacients, setPacients}) {
     
     setError(false);
 
-    var newPacient = {
+    var objectPacient = {
       petName, 
       ownerName,
       email,
       date,
-      description,
-      id: generateId()
+      description
     }
 
-    setPacients([...pacients, newPacient])
+    if (pacient.id) {
+      //editing pacient
+      objectPacient.id = pacient.id
+
+      const updatedPacients = pacients.map((pacientState) => {
+        if (pacientState.id === objectPacient.id) {
+          return objectPacient
+        } else {
+          return pacientState
+        }
+      })
+
+      setPacients(updatedPacients)
+      setPacient({})
+
+    } else {
+      //adding a new pacient
+      objectPacient.id = generateId()
+      setPacients([...pacients, objectPacient])
+    }
 
     setPetName('')
     setOwnerName('')
@@ -136,7 +165,7 @@ function Form({pacients, setPacients}) {
         <input 
           type="submit"
           className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-all rounded-md"
-          value="Agregar paciente"
+          value={pacient.id ? 'Editar paciente' : 'Agregar paciente'}
         />
 
       </form>
